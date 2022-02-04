@@ -29,23 +29,16 @@ const app = {
 
       // Add white keys to octave
       for (let i = 0; i < 7; i++) {
-        const whiteKey = utils.createSVGElement("rect");
-        whiteKey.classList.add("white-key");
+        const whiteKey = this.createKey({ className: "white-key", width: 80, height: 400 });
         whiteKey.setAttribute("x", whiteKeyXPosition);
-        whiteKey.setAttribute("width", 80);
-        whiteKey.setAttribute("height", 400);
         whiteKeyXPosition += 80;
         octave.appendChild(whiteKey);
       }
 
       // Add black keys to octave
       for (let i = 0; i < 5; i++) {
-        const blackKey = utils.createSVGElement("rect");
-        blackKey.classList.add("black-key");
+        const blackKey = this.createKey({ className: "black-key", width: 40, height: 250 });
         blackKey.setAttribute("x", blackKeyXPosition);
-        blackKey.setAttribute("width", 40);
-        blackKey.setAttribute("height", 250);
-
         if (i === 1) {
           blackKeyXPosition += 160;
         } else {
@@ -63,6 +56,13 @@ const app = {
     octave.classList.add("octave");
     octave.setAttribute("transform", `translate(${ octaveNumber * octaveWidth }, 0)`);
     return octave;
+  },
+  createKey({ className, width, height }) {
+    const key = utils.createSVGElement("rect");
+    key.classList.add(className);
+    key.setAttribute("width", width);
+    key.setAttribute("height", height);
+    return key;
   }
 }
 
