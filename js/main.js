@@ -22,9 +22,7 @@ const app = {
 
     // Create octaves
     for (let i = 0; i < numberOfOctaves; i++) {
-      const octave = utils.createSVGElement("g");
-      octave.classList.add("octave");
-      octave.setAttribute("transform", `translate(${i * octaveWidth}, 0)`);
+      const octave = this.createOctave(i);
 
       let whiteKeyXPosition = 0;
       let blackKeyXPosition = 60;
@@ -59,6 +57,12 @@ const app = {
 
       pianoKeyboard.appendChild(octave);
     }
+  },
+  createOctave(octaveNumber) {
+    const octave = utils.createSVGElement("g");
+    octave.classList.add("octave");
+    octave.setAttribute("transform", `translate(${ octaveNumber * octaveWidth }, 0)`);
+    return octave;
   }
 }
 
