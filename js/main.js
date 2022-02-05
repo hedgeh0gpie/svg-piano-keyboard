@@ -2,6 +2,8 @@
 
 let numberOfOctaves = 5;
 const octaveWidth = 560;
+const naturalNotes = ["C", "D", "E", "F", "G", "A", "B"];
+const range = ["F3", "A7"];
 
 const pianoSVG = `<svg
       width="100%"
@@ -29,7 +31,7 @@ const app = {
 
       // Add white keys to octave
       for (let i = 0; i < 7; i++) {
-        const whiteKey = this.createKey({ className: "white-key", width: 80, height: 400 });
+        const whiteKey = this.createKey({className: "white-key", width: 80, height: 400});
         whiteKey.setAttribute("x", whiteKeyXPosition);
         whiteKeyXPosition += 80;
         octave.appendChild(whiteKey);
@@ -37,7 +39,7 @@ const app = {
 
       // Add black keys to octave
       for (let i = 0; i < 5; i++) {
-        const blackKey = this.createKey({ className: "black-key", width: 40, height: 250 });
+        const blackKey = this.createKey({className: "black-key", width: 40, height: 250});
         blackKey.setAttribute("x", blackKeyXPosition);
         if (i === 1) {
           blackKeyXPosition += 160;
@@ -54,15 +56,49 @@ const app = {
   createOctave(octaveNumber) {
     const octave = utils.createSVGElement("g");
     octave.classList.add("octave");
-    octave.setAttribute("transform", `translate(${ octaveNumber * octaveWidth }, 0)`);
+    octave.setAttribute("transform", `translate(${octaveNumber * octaveWidth}, 0)`);
     return octave;
   },
-  createKey({ className, width, height }) {
+  createKey({className, width, height}) {
     const key = utils.createSVGElement("rect");
     key.classList.add(className);
     key.setAttribute("width", width);
     key.setAttribute("height", height);
     return key;
+  },
+  getAllNaturalNotes([firstNote, lastNote]) {
+    // Assign octave number, notes and positions to variables
+    const firstNoteName = firstNote[0];
+    const firstOctaveNumber = parseInt(firstNote[1]);
+
+    const lastNoteName = lastNote[0];
+    const lastOctaveNumber = parseInt(lastNote[1]);
+
+    const firstNotePosition = naturalNotes.indexOf(firstNoteName);
+    const lastNotePosition = naturalNotes.indexOf(lastNoteName);
+
+    const allNaturalNotes = [];
+
+    for (let octaveNumber = firstOctaveNumber; octaveNumber <= lastOctaveNumber; octaveNumber++) {
+      // Handle first octave
+      if (octaveNumber === firstOctaveNumber) {
+        const firstOctave = naturalNotes.slice(firstNotePosition).map((noteName) => {
+          return noteName + octaveNumber;
+        });
+        allNaturalNotes.push(firstOctave);
+        // Handle last octave
+      } else if (octaveNumber === lastOctaveNumber) {
+        const lastOctave = naturalNotes.slice(0, lastNotePosition + 1).map((noteName) => {
+          return noteName + octaveNumber;
+        });
+        allNaturalNotes.push(lastOctave);
+      } else {
+        allNaturalNotes.push(naturalNotes.map((noteName) => {
+          return noteName + octaveNumber;
+        }));
+      }
+    }
+    return allNaturalNotes;
   }
 }
 
@@ -74,6 +110,8 @@ const utils = {
 }
 
 app.setupPiano();
+app.getAllNaturalNotes(range);
+
 
 // const octaveKeys = `<rect class="piano-key white-key" x="0" y="0" width="80" height="400"></rect>
 //       <rect class="piano-key white-key" x="80" y="0" width="80" height="400"></rect>
