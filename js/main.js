@@ -2,6 +2,10 @@
 
 let numberOfOctaves = 5;
 const octaveWidth = 560;
+
+const whiteKeyWidth = 80;
+const pianoHeight = 400;
+
 const naturalNotes = ["C", "D", "E", "F", "G", "A", "B"];
 const range = ["F3", "A7"];
 
@@ -31,20 +35,20 @@ const app = {
 
       // Add white keys to octave
       for (let i = 0; i < 7; i++) {
-        const whiteKey = this.createKey({className: "white-key", width: 80, height: 400});
+        const whiteKey = this.createKey({className: "white-key", width: whiteKeyWidth, height: 400});
         whiteKey.setAttribute("x", whiteKeyXPosition);
-        whiteKeyXPosition += 80;
+        whiteKeyXPosition += whiteKeyWidth;
         octave.appendChild(whiteKey);
       }
 
       // Add black keys to octave
       for (let i = 0; i < 5; i++) {
-        const blackKey = this.createKey({className: "black-key", width: 40, height: 250});
+        const blackKey = this.createKey({className: "black-key", width: whiteKeyWidth / 2, height: 250});
         blackKey.setAttribute("x", blackKeyXPosition);
         if (i === 1) {
-          blackKeyXPosition += 160;
+          blackKeyXPosition += whiteKeyWidth * 2;
         } else {
-          blackKeyXPosition += 80;
+          blackKeyXPosition += whiteKeyWidth;
         }
         octave.appendChild(blackKey);
 
@@ -82,20 +86,20 @@ const app = {
     for (let octaveNumber = firstOctaveNumber; octaveNumber <= lastOctaveNumber; octaveNumber++) {
       // Handle first octave
       if (octaveNumber === firstOctaveNumber) {
-        const firstOctave = naturalNotes.slice(firstNotePosition).map((noteName) => {
-          return noteName + octaveNumber;
+        naturalNotes.slice(firstNotePosition).forEach((noteName) => {
+          allNaturalNotes.push(noteName + octaveNumber);
         });
-        allNaturalNotes.push(firstOctave);
+
         // Handle last octave
       } else if (octaveNumber === lastOctaveNumber) {
-        const lastOctave = naturalNotes.slice(0, lastNotePosition + 1).map((noteName) => {
-          return noteName + octaveNumber;
+        naturalNotes.slice(0, lastNotePosition + 1).forEach((noteName) => {
+          allNaturalNotes.push(noteName + octaveNumber);
         });
-        allNaturalNotes.push(lastOctave);
+
       } else {
-        allNaturalNotes.push(naturalNotes.map((noteName) => {
-          return noteName + octaveNumber;
-        }));
+        naturalNotes.forEach((noteName) => {
+          allNaturalNotes.push(noteName + octaveNumber);
+        });
       }
     }
     return allNaturalNotes;
@@ -110,21 +114,21 @@ const utils = {
 }
 
 app.setupPiano();
-app.getAllNaturalNotes(range);
+console.log(app.getAllNaturalNotes(range));;
 
 
-// const octaveKeys = `<rect class="piano-key white-key" x="0" y="0" width="80" height="400"></rect>
-//       <rect class="piano-key white-key" x="80" y="0" width="80" height="400"></rect>
-//       <rect class="piano-key white-key" x="160" y="0" width="80" height="400"></rect>
-//       <rect class="piano-key white-key" x="240" y="0" width="80" height="400"></rect>
-//       <rect class="piano-key white-key" x="320" y="0" width="80" height="400"></rect>
-//       <rect class="piano-key white-key" x="400" y="0" width="80" height="400"></rect>
-//       <rect class="piano-key white-key" x="480" y="0" width="80" height="400"></rect>
+// const octaveKeys = `<rect class="piano-key white-key" x="0" y="0" width="whiteKeyWidth" height="400"></rect>
+//       <rect class="piano-key white-key" x="whiteKeyWidth" y="0" width="whiteKeyWidth" height="400"></rect>
+//       <rect class="piano-key white-key" x="160" y="0" width="whiteKeyWidth" height="400"></rect>
+//       <rect class="piano-key white-key" x="240" y="0" width="whiteKeyWidth" height="400"></rect>
+//       <rect class="piano-key white-key" x="320" y="0" width="whiteKeyWidth" height="400"></rect>
+//       <rect class="piano-key white-key" x="400" y="0" width="whiteKeyWidth" height="400"></rect>
+//       <rect class="piano-key white-key" x="4whiteKeyWidth" y="0" width="whiteKeyWidth" height="400"></rect>
 //
 //       <rect class="piano-key black-key" x="60" y="0" width="40" height="250"></rect>
 //       <rect class="piano-key black-key" x="140" y="0" width="40" height="250"></rect>
 //       <rect class="piano-key black-key" x="300" y="0" width="40" height="250"></rect>
-//       <rect class="piano-key black-key" x="380" y="0" width="40" height="250"></rect>
+//       <rect class="piano-key black-key" x="3whiteKeyWidth" y="0" width="40" height="250"></rect>
 //       <rect class="piano-key black-key" x="460" y="0" width="40" height="250"></rect>`;
 //
 // const piano = document.querySelector("#piano");
