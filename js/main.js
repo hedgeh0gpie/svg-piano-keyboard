@@ -7,24 +7,18 @@ const whiteKeyWidth = 80;
 const pianoHeight = 400;
 
 const naturalNotes = ["C", "D", "E", "F", "G", "A", "B"];
-const range = ["F3", "A7"];
-
-const pianoSVG = `<svg
-      width="100%"
-      viewBox="0 0 ${numberOfOctaves * octaveWidth} 400"
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      xmlns:xlink="http://www.w3.org/1999/xlink">
-      <g id="piano-keyboard"></g>
-      </svg>`;
+const range = ["G2", "A7"];
 
 const piano = document.querySelector("#piano");
 
 const app = {
   setupPiano() {
+    const allNaturalNotes = this.getAllNaturalNotes(range);
+    const pianoWidth = allNaturalNotes.length * whiteKeyWidth;
+
+    const SVG = this.createMainSVG(pianoWidth, pianoHeight);
     // Add main SVG to piano div
-    piano.innerHTML = pianoSVG;
-    const pianoKeyboard = document.querySelector("#piano-keyboard");
+    piano.appendChild(SVG);
 
     // Create octaves
     for (let i = 0; i < numberOfOctaves; i++) {
@@ -103,6 +97,17 @@ const app = {
       }
     }
     return allNaturalNotes;
+  },
+  createMainSVG(pianoWidth, pianoHeight) {
+    const svg = utils.createSVGElement("svg");
+
+    svg.setAttribute("width", "100%");
+    svg.setAttribute("version", "1.1");
+    svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    svg.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+    svg.setAttribute("viewBox", `0 0 ${pianoWidth} ${pianoHeight}`);
+
+    return svg;
   }
 }
 
