@@ -1,12 +1,12 @@
 "use strict";
 
-let numberOfOctaves = 5;
-const octaveWidth = 560;
-
 const whiteKeyWidth = 80;
 const pianoHeight = 400;
 
 const naturalNotes = ["C", "D", "E", "F", "G", "A", "B"];
+const naturalNotesSharps = ["C", "D", "F", "G", "A"];
+const naturalNotesFlats = ["D", "E", "G", "A", "B"];
+
 const range = ["G2", "A7"];
 
 const piano = document.querySelector("#piano");
@@ -20,36 +20,39 @@ const app = {
     // Add main SVG to piano div
     piano.appendChild(SVG);
 
-    // Create octaves
-    for (let i = 0; i < numberOfOctaves; i++) {
-      const octave = this.createOctave(i);
-
-      let whiteKeyXPosition = 0;
-      let blackKeyXPosition = 60;
-
-      // Add white keys to octave
-      for (let i = 0; i < 7; i++) {
-        const whiteKey = this.createKey({className: "white-key", width: whiteKeyWidth, height: 400});
-        whiteKey.setAttribute("x", whiteKeyXPosition);
-        whiteKeyXPosition += whiteKeyWidth;
-        octave.appendChild(whiteKey);
-      }
-
-      // Add black keys to octave
-      for (let i = 0; i < 5; i++) {
-        const blackKey = this.createKey({className: "black-key", width: whiteKeyWidth / 2, height: 250});
-        blackKey.setAttribute("x", blackKeyXPosition);
-        if (i === 1) {
-          blackKeyXPosition += whiteKeyWidth * 2;
-        } else {
-          blackKeyXPosition += whiteKeyWidth;
-        }
-        octave.appendChild(blackKey);
-
-      }
-
-      pianoKeyboard.appendChild(octave);
+    // Add white keys
+    let whiteKeyPositionX = 0;
+    for (let i = 0; i < allNaturalNotes.length; i++) {
+      const whiteKey = this.createKey({className: "white-key", width: whiteKeyWidth, height: pianoHeight});
+      whiteKey.setAttribute("x", whiteKeyPositionX);
+      whiteKey.setAttribute("data-note-name", allNaturalNotes[i]);
+      whiteKeyPositionX += whiteKeyWidth;
+      SVG.appendChild(whiteKey);
     }
+    // Add black keys
+    let blackKeyPositionX = 60;
+    allNaturalNotes.forEach((naturalNote, index, array) => {
+      const blackKey = this.createKey({className: "black-key", width: whiteKeyWidth / 2, height: pianoHeight / 1.6});
+      blackKey.setAttribute("x", blackKeyPositionX);
+
+      for (let i = 0; i < naturalNotesSharps.length; i++) {
+        let naturalSharpNoteName = naturalNotesSharps[i];
+        let naturalFlatNoteName = naturalNotesFlats[i];
+
+        if (naturalSharpNoteName === naturalNote[0]) {
+          blackKey.setAttribute("data-sharp-name", `${naturalSharpNoteName}#${naturalNote[1]}`);
+          blackKey.setAttribute("data-flat-name", `${naturalFlatNoteName}b${naturalNote[1]}`);
+
+          // Add double spacing between D# and A#
+          if (naturalSharpNoteName === "D" || naturalSharpNoteName === "A") {
+            blackKeyPositionX += whiteKeyWidth * 2;
+          } else {
+            blackKeyPositionX += whiteKeyWidth;
+          }
+          SVG.appendChild(blackKey);
+        }
+      }
+    })
   },
   createOctave(octaveNumber) {
     const octave = utils.createSVGElement("g");
