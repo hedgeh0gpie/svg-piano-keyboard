@@ -7,7 +7,7 @@ const naturalNotes = ["C", "D", "E", "F", "G", "A", "B"];
 const naturalNotesSharps = ["C", "D", "F", "G", "A"];
 const naturalNotesFlats = ["D", "E", "G", "A", "B"];
 
-const range = ["G2", "A7"];
+const range = ["A0", "C8"];
 
 const piano = document.querySelector("#piano");
 
@@ -49,7 +49,11 @@ const app = {
           } else {
             blackKeyPositionX += whiteKeyWidth;
           }
-          SVG.appendChild(blackKey);
+          // If last iteration of keys, do not add black key
+          if (index !== array.length - 1) {
+            SVG.appendChild(blackKey);
+          }
+
         }
       }
     })
