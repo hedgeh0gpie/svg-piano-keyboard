@@ -16,11 +16,15 @@ const app = {
     const pianoWidth = allNaturalNotes.length * whiteKeyWidth;
 
     const SVG = this.createMainSVG(pianoWidth, pianoHeight);
-    // Add main SVG to piano div
-    piano.appendChild(SVG);
 
     // Add white keys
     let whiteKeyPositionX = 0;
+
+    allNaturalNotes.forEach((noteName) => {
+      const whiteKeyTextGroup = utils.createSVGElement("g");
+      const whiteKey = this.createKey({className: "white-key", width: whiteKeyWidth, height: pianoHeight});
+      const text = utils.createSVGElement("text");
+    });
     for (let i = 0; i < allNaturalNotes.length; i++) {
       const whiteKey = this.createKey({className: "white-key", width: whiteKeyWidth, height: pianoHeight});
       utils.setAttributes(whiteKey, {
@@ -61,7 +65,9 @@ const app = {
 
         }
       }
-    })
+    });
+    // Add main SVG to piano div
+    piano.appendChild(SVG);
   },
   createOctave(octaveNumber) {
     const octave = utils.createSVGElement("g");
@@ -136,6 +142,9 @@ const utils = {
     for (let key in attrs) {
       el.setAttribute(key, attrs[key]);
     }
+  },
+  addTextContent(el, content) {
+    el.textContent = content;
   }
 }
 
