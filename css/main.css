@@ -92,6 +92,11 @@ textarea {
   padding: 0;
 }
 
+#piano {
+    clip-path: inset(15px 0px 0px 0px);
+  margin-top: -15px;
+}
+
 .white-key {
   stroke: #555555;
   fill: #FFFFF7;
