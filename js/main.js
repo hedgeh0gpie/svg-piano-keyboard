@@ -9,10 +9,9 @@ const naturalNotesFlats = ["D", "E", "G", "A", "B"];
 
 const range = ["A0", "C8"];
 
-const piano = document.querySelector("#piano");
-
 const app = {
   setupPiano() {
+    const piano = document.querySelector("#piano");
     const allNaturalNotes = this.getAllNaturalNotes(range);
     const pianoWidth = allNaturalNotes.length * whiteKeyWidth;
 
@@ -24,8 +23,10 @@ const app = {
     let whiteKeyPositionX = 0;
     for (let i = 0; i < allNaturalNotes.length; i++) {
       const whiteKey = this.createKey({className: "white-key", width: whiteKeyWidth, height: pianoHeight});
-      whiteKey.setAttribute("x", whiteKeyPositionX);
-      whiteKey.setAttribute("data-note-name", allNaturalNotes[i]);
+      utils.setAttributes(whiteKey, {
+        "x": whiteKeyPositionX,
+        "data-note-name": allNaturalNotes[i]
+      });
       whiteKeyPositionX += whiteKeyWidth;
       SVG.appendChild(whiteKey);
     }
@@ -33,15 +34,19 @@ const app = {
     let blackKeyPositionX = 60;
     allNaturalNotes.forEach((naturalNote, index, array) => {
       const blackKey = this.createKey({className: "black-key", width: whiteKeyWidth / 2, height: pianoHeight / 1.6});
-      blackKey.setAttribute("x", blackKeyPositionX);
+      utils.setAttributes(blackKey, {
+        "x": blackKeyPositionX
+      });
 
       for (let i = 0; i < naturalNotesSharps.length; i++) {
         let naturalSharpNoteName = naturalNotesSharps[i];
         let naturalFlatNoteName = naturalNotesFlats[i];
 
         if (naturalSharpNoteName === naturalNote[0]) {
-          blackKey.setAttribute("data-sharp-name", `${naturalSharpNoteName}#${naturalNote[1]}`);
-          blackKey.setAttribute("data-flat-name", `${naturalFlatNoteName}b${naturalNote[1]}`);
+          utils.setAttributes(blackKey, {
+            "data-sharp-name": `${naturalSharpNoteName}#${naturalNote[1]}`,
+            "data-flat-name": `${naturalFlatNoteName}b${naturalNote[1]}`
+          });
 
           // Add double spacing between D# and A#
           if (naturalSharpNoteName === "D" || naturalSharpNoteName === "A") {
@@ -67,8 +72,10 @@ const app = {
   createKey({className, width, height}) {
     const key = utils.createSVGElement("rect");
     key.classList.add(className);
-    key.setAttribute("width", width);
-    key.setAttribute("height", height);
+    utils.setAttributes(key, {
+      "width": width,
+      "height": height
+    });
     return key;
   },
   getAllNaturalNotes([firstNote, lastNote]) {
@@ -108,11 +115,13 @@ const app = {
   createMainSVG(pianoWidth, pianoHeight) {
     const svg = utils.createSVGElement("svg");
 
-    svg.setAttribute("width", "100%");
-    svg.setAttribute("version", "1.1");
-    svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-    svg.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
-    svg.setAttribute("viewBox", `0 0 ${pianoWidth} ${pianoHeight}`);
+    utils.setAttributes(svg, {
+      "width": "100%",
+      "version": "1.1",
+      "xmlns": "http://www.w3.org/2000/svg",
+      "xmlns:xlink": "http://www.w3.org/1999/xlink",
+      "viewBox": `0 0 ${pianoWidth} ${pianoHeight}`
+    });
 
     return svg;
   }
@@ -122,6 +131,11 @@ const utils = {
   createSVGElement(el) {
     const element = document.createElementNS("http://www.w3.org/2000/svg", el);
     return element;
+  },
+  setAttributes(el, attrs) {
+    for (let key in attrs) {
+      el.setAttribute(key, attrs[key]);
+    }
   }
 }
 
