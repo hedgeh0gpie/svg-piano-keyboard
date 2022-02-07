@@ -24,16 +24,28 @@ const app = {
       const whiteKeyTextGroup = utils.createSVGElement("g");
       const whiteKey = this.createKey({className: "white-key", width: whiteKeyWidth, height: pianoHeight});
       const text = utils.createSVGElement("text");
-    });
-    for (let i = 0; i < allNaturalNotes.length; i++) {
-      const whiteKey = this.createKey({className: "white-key", width: whiteKeyWidth, height: pianoHeight});
+
+      utils.addTextContent(text, noteName);
+      utils.setAttributes(whiteKeyTextGroup, {"width": whiteKeyWidth});
+      utils.setAttributes(text, {
+        "x": whiteKeyPositionX + whiteKeyWidth / 2,
+        "y": 380,
+        "text-anchor": "middle"
+      });
       utils.setAttributes(whiteKey, {
         "x": whiteKeyPositionX,
-        "data-note-name": allNaturalNotes[i]
+        "data-note-name": noteName
       });
+
+      text.classList.add("white-key-text");
+      whiteKeyTextGroup.appendChild(whiteKey);
+      whiteKeyTextGroup.appendChild(text);
+      SVG.appendChild(whiteKeyTextGroup);
+
+      // Increment spacing between keys
       whiteKeyPositionX += whiteKeyWidth;
-      SVG.appendChild(whiteKey);
-    }
+    });
+
     // Add black keys
     let blackKeyPositionX = 60;
     allNaturalNotes.forEach((naturalNote, index, array) => {
